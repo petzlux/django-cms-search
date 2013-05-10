@@ -87,8 +87,7 @@ def page_index_factory(language_code, proxy_model):
             for site_obj in Site.objects.all():
                 qs = base_qs.published(site=site_obj.id).filter(
                     Q(title_set__language=language_code) & (Q(title_set__redirect__exact='') | Q(title_set__redirect__isnull=True)))
-                if 'publisher' in settings.INSTALLED_APPS:
-                    qs = qs.filter(publisher_is_draft=True)
+                qs = qs.filter(publisher_is_draft=False)
                 qs = qs.distinct()
                 result_qs |= qs
             return result_qs
