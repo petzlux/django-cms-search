@@ -35,7 +35,7 @@ from cms_search import settings as search_settings
 
 rf = RequestFactory()
 
-def page_index_factory(language_code):
+def page_index_factory(language_code, proxy_model):
 
     class _PageIndex(indexes.SearchIndex, indexes.Indexable):
         language = language_code
@@ -50,11 +50,11 @@ def page_index_factory(language_code):
         def prepare(self, obj):
             current_languge = get_language()
             try:
-                if current_languge != self._language:
-                    activate(self._language)
+                if current_languge != self.language:
+                    activate(self.language)
                 request = rf.get("/")
                 request.session = {}
-                request.LANGUAGE_CODE = self._language
+                request.LANGUAGE_CODE = self.language
                 self.prepared_data = super(_PageIndex, self).prepare(obj)
                 plugins = CMSPlugin.objects.filter(language=language_code, placeholder__in=obj.placeholders.all())
                 text = u''
@@ -71,7 +71,7 @@ def page_index_factory(language_code):
                 text += u' '
                 text += obj.get_meta_keywords() or u''
                 self.prepared_data['text'] = text
-                self.prepared_data['language'] = self._language
+#                self.prepared_data['language'] = self.language
                 return self.prepared_data
             finally:
                 if get_language() != current_languge:
@@ -80,7 +80,7 @@ def page_index_factory(language_code):
         def get_model(self):
             return proxy_model
 
-        def index_queryset(self):
+        def index_queryset(self, using=None):
             # get the correct language and exclude pages that have a redirect
             base_qs = super(_PageIndex, self).index_queryset()
             result_qs = EmptyQuerySet()
