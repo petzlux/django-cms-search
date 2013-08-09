@@ -64,7 +64,7 @@ def page_index_factory(language_code, proxy_model):
                         # this is an empty plugin
                         continue
                     if hasattr(instance, 'search_fields'):
-                        text += u' '.join(force_unicode(_strip_tags(getattr(instance, field, ''))) for field in instance.search_fields)
+                        text += u' ' + u' '.join(force_unicode(_strip_tags(getattr(instance, field, ''))) for field in instance.search_fields)
                     if getattr(instance, 'search_fulltext', False) or getattr(plugin_type, 'search_fulltext', False):
                         text += _strip_tags(instance.render_plugin(context=RequestContext(request))) + u' '
                 text += obj.get_meta_description() or u''
