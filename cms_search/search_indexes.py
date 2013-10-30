@@ -67,7 +67,7 @@ def page_index_factory(language_code, proxy_model):
                         text += u' ' + u' '.join(force_unicode(_strip_tags(getattr(instance, field, ''))) for field in instance.search_fields)
                     if getattr(instance, 'search_fulltext', False) or getattr(plugin_type, 'search_fulltext', False):
                         text += _strip_tags(instance.render_plugin(context=RequestContext(request))) + u' '
-                text += obj.get_meta_description() or u''
+                #text += obj.get_meta_description() or u''
                 text += u' '
                 text += obj.get_title() or u''
                 text += u' '
