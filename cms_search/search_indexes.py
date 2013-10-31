@@ -30,8 +30,8 @@ from haystack import indexes, connections
 
 from cms.models.pluginmodel import CMSPlugin
 
-from cms_search import models as proxy_models
-from cms_search import settings as search_settings
+import models  as proxy_models
+import settings as search_settings
 
 rf = RequestFactory()
 
