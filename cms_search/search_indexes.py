@@ -46,6 +46,7 @@ def page_index_factory(language_code, proxy_model):
         url = indexes.CharField(stored=True, indexed=False, model_attr='get_absolute_url')
         title = indexes.CharField(stored=True, indexed=False, model_attr='get_title')
         site_id = indexes.IntegerField(stored=True, indexed=True, model_attr='site_id')
+        #reverse_id = indexes.CharField(stored=True, indexed=False, model_attr='reverse_id' )
 
         def prepare(self, obj):
             current_languge = get_language()
@@ -89,7 +90,7 @@ def page_index_factory(language_code, proxy_model):
             for site_obj in Site.objects.all():
                 qs = base_qs.published(site=site_obj.id).filter(
                     Q(title_set__language=language_code) & (Q(title_set__redirect__exact='') | Q(title_set__redirect__isnull=True)))
-                qs = qs.filter(publisher_is_draft=False)
+                qs = qs.filter(publisher_is_draft=False).exclude(reverse_id = "homepage")
                 qs = qs.distinct()
                 result_qs |= qs
             return result_qs
